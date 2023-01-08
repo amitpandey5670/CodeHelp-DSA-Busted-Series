@@ -1,0 +1,62 @@
+Node* merge(Node* down, Node* right)
+{
+    
+    Node* curr = down;
+    if (right == NULL)
+    {
+        while (curr -> bottom != NULL)
+        {
+            curr = curr -> bottom;
+        }
+        curr -> bottom = right;
+        return down;
+    }
+
+    Node* prev = NULL;
+    while ( curr -> bottom != NULL)
+    {
+        if (curr -> bottom -> data > right ->data)
+        {
+            Node* next_next = curr -> bottom;
+            Node* right_next = right -> bottom;
+            right -> bottom = curr -> bottom;
+            curr -> bottom = right;
+            right = right_next;
+            prev = curr -> bottom;
+            curr = next_next;          
+        }
+        else
+        {
+            curr = curr -> bottom;
+        }
+        
+    }
+
+    while(right != NULL && curr -> data > right -> data)
+    {
+
+        Node* right_next = right -> bottom;
+        right -> bottom = curr;
+        prev -> bottom = right;
+        prev = right;
+        right = right_next;
+    }
+    
+    curr -> bottom = right;
+
+    return down;
+}
+
+Node* flatten(Node* root) 
+{
+    // Write your code here
+    //Base case
+    if (root == NULL)
+    {
+        return root;
+    }
+    Node* down = root;
+    Node* right = flatten(root -> next);
+    Node* ans = merge(down, right);
+    return ans;
+}
